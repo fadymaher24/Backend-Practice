@@ -5,6 +5,16 @@ const buttonElement = document.querySelector('button')!;
 const numResult: number[] = [];
 const TextResult: string[] = [];
 
+// type alias
+type NumOrString = number | string;
+type resultType = {val: number, timestamp: Date};
+
+// interface
+interface resultType2 {
+    val: number;
+    timestamp: Date;
+}
+
 function add(num1: number | string,num2: number | string){
     // type guard
     if(typeof num1 === 'number' && typeof num2 === 'number'){
@@ -16,7 +26,7 @@ function add(num1: number | string,num2: number | string){
     return +num1 + +num2;
 }
 
-function printResult(resultObj : {val: number, timestamp: Date}){
+function printResult(resultObj : resultType){
     console.log(resultObj.val);
 }
 
