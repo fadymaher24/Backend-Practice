@@ -2,7 +2,8 @@ const num1Element = document.getElementById('num1') as HTMLInputElement;
 const num2Element = document.getElementById('num2') as HTMLInputElement;
 const buttonElement = document.querySelector('button')!;
 
-const numResult: number[] = [];
+// generic type is simply a type that interacts with another type
+const numResult: Array<number> = [];
 const TextResult: string[] = [];
 
 // type alias
@@ -39,4 +40,15 @@ buttonElement.addEventListener('click', () =>{
     TextResult.push(stringResult as string);
     printResult({val: result as number, timestamp: new Date()});
     console.log(numResult , TextResult);
+});
+
+
+const myPromise = new Promise<string>((resolve, reject) => {
+    setTimeout(() => {
+        resolve('It worked');
+    }, 1000);
+});
+
+myPromise.then(result => {
+    console.log(result.split('w'));
 });
