@@ -17,4 +17,7 @@ npm install --save-dev @types/node
 6-for express library
 npm install --save-dev @types/express
 
+7- install type package for body-parser library 
+npm install --save-dev @types/body-parser
+
 There are TypeScript translation available for all major JS libraries in @types/.....
