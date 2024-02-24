@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
 router.post('/todo', (req, res, next) => {
     const newTodo: Todo ={
         id: new Date().toISOString(),
-        text: req.body.text
+        text: req.body. text
     }; 
 
     todos.push(newTodo);
