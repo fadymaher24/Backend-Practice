@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const path_1 = __importDefault(require("path"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const feed_1 = __importDefault(require("./routes/feed"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -14,6 +15,7 @@ const port = Number(process.env.PORT);
 const app = (0, express_1.default)();
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(body_parser_1.default.json()); // application/json
+app.use("/images", express_1.default.static(path_1.default.join(__dirname, "images")));
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
@@ -21,6 +23,12 @@ app.use((req, res, next) => {
     next();
 });
 app.use("/feed", feed_1.default);
+app.use((error, req, res, next) => {
+    console.log(error);
+    const status = error.statusCode || 500;
+    const message = error.message;
+    res.status(status).json({ message: message });
+});
 mongoose_1.default
     .connect(urL)
     .then((result) => {
