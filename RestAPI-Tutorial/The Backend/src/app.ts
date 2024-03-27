@@ -23,9 +23,10 @@ app.use("/feed", feedRoutes);
 
 mongoose
   .connect(
-    "mongodb+srv://fadyy:11223344Fff@cluster0.uz4c3us.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://fadyy:11223344Fff@cluster0.uz4c3us.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0"
   )
   .then((result) => {
+    console.log("Connected to MongoDB");
     app.listen(8080);
   })
   .catch((err) => console.log(err));
