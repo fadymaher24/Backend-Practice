@@ -8,7 +8,7 @@ node_modules/
 .eslintcache
 
 # dist directory
-dist
+dist/
 
 # Optional yarn cache directory
 .yarn
