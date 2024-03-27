@@ -8,13 +8,13 @@ node_modules/
 .eslintcache
 
 # dist directory
-dist/
+dist
 
 # Optional yarn cache directory
 .yarn
 
 # image directory
-image/
+images/
 
 # env
 .env
