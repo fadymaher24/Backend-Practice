@@ -1,0 +1,46 @@
+# Rest APIs
+
+## Table of Contents
+
+1. [Folder Structure](#folder-structure)
+2. [Installation](#installation)
+
+## Folder Structure
+
+.
+├── src/ # Source files
+│ ├── app.ts # Main application entry point
+│ ├── controllers/ # controllers files
+| ├──
+│ ├── routes/ # Route files
+│ │ ├── feed.ts # Main router file (e.g., for express.js)
+│ │ ├── users.ts # Route file for user-related routes
+│ │ └── ... # Other route files
+│ └── ... # Other source files
+├── dist/ # Automated tests
+│ ├── unit/ # Route files
+│ └── routes/ # Integration tests
+├── node_modules/ # Installed packages
+├── .gitignore # Specifies intentionally untracked files to ignore
+├── package.json # Defines npm package dependencies and scripts
+├── tsconfig.json # Configuration for TypeScript
+└── README.md # The file you are reading
+
+## Installation
+
+```bash
+npm install express
+# implementing validation in nodeJS app
+npm install --save express-validator
+npm install --save-dev @types/express-validator
+# install mongoose to connect to mongoDB
+npm install mongoose
+
+
+
+
+
+
+
+
+
