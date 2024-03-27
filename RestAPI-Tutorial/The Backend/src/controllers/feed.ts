@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 
+import Post from "../models/post";
+
 export const getPosts = (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({
     posts: [
@@ -28,16 +30,21 @@ export const createPost = (req: Request, res: Response, next: NextFunction) => {
   }
   const title = req.body.title;
   const content = req.body.content;
-  console.log(title, content);
-  // Create post in db
-  res.status(201).json({
-    message: "Post created successfully!",
-    post: {
-      id: new Date().toISOString(),
-      title: title,
-      content: content,
-      creator: { name: "Fady" },
-      createdAt: new Date(),
-    },
+  const post = new Post({
+    title: title,
+    content: content,
+    imageUrl: "images/favico.ico",
+    creator: { name: "Fady" },
   });
+  post
+    .save()
+    .then((result) => {
+      res.status(201).json({
+        message: "Post created successfully!",
+        post: result,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
