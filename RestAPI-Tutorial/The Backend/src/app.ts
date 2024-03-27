@@ -4,6 +4,12 @@ import mongoose from "mongoose";
 
 import feedRoutes from "./routes/feed";
 
+import dotenv from "dotenv";
+dotenv.config();
+
+const urL: string = process.env.MONGO_URL!;
+const port: number = Number(process.env.PORT);
+
 const app = express();
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
@@ -22,11 +28,9 @@ app.use((req, res, next) => {
 app.use("/feed", feedRoutes);
 
 mongoose
-  .connect(
-    "mongodb+srv://fadyy:11223344Fff@cluster0.uz4c3us.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect(urL)
   .then((result) => {
     console.log("Connected to MongoDB");
-    app.listen(8080);
+    app.listen(port);
   })
   .catch((err) => console.log(err));
