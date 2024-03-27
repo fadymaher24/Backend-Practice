@@ -14,4 +14,5 @@ router.post("/post", [
     (0, express_validator_1.body)("title").trim().isLength({ min: 5 }),
     (0, express_validator_1.body)("content").trim().isLength({ min: 5 }),
 ], feedController.createPost);
+router.get("/post/:postId", feedController.getPost);
 exports.default = router;
