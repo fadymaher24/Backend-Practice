@@ -36,6 +36,11 @@ npm install --save-dev @types/express-validator
 # install mongoose to connect to mongoDB
 npm install mongoose
 
+# install multer for handling multipart/form-data, which is primarily used for uploading files
+npm install --save multer
+npm install --save-dev @types/multer
+
+
 
 
 
