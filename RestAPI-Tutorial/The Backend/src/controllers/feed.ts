@@ -130,3 +130,28 @@ const clearImage = (filePath: string) => {
     console.log("File does not exist");
   }
 };
+
+export const deletePost = (req: Request, res: Response, next: NextFunction) => {
+  const postId = req.params.postId;
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) {
+        const error = new Error("Could not find post.");
+        (error as any).statusCode = 404;
+        throw error;
+      }
+      // Check logged in user
+      clearImage(post.imageUrl);
+      return Post.findByIdAndDelete(postId); // Replace 'findByIdAndRemove' with 'findByIdAndDelete'
+    })
+    .then((result) => {
+      console.log(result);
+      res.status(200).json({ message: "Deleted post." });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
