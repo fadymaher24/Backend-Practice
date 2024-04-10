@@ -44,8 +44,8 @@ npm install --save-dev @types/multer
 # install bcryptjs for hashing passwords
 npm install --save bcryptjs @types/bcryptjs
 
-
-
+# install jsonwebtoken for creating and verifying tokens for authentication
+npm install --save jsonwebtoken @types/jsonwebtoken
 
 
 
