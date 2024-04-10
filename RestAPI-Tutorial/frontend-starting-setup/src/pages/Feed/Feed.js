@@ -122,10 +122,10 @@ class Feed extends Component {
       //   "Content-Type": "application/json",
       // }
       body: formData,
-      body: JSON.stringify({
-        title: postData.title,
-        content: postData.content,
-      }),
+      // body: JSON.stringify({
+      //   title: postData.title,
+      //   content: postData.content,
+      // }),
     })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
