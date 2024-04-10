@@ -16,10 +16,7 @@ const app = express();
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(
-      null,
-      "/home/fadymaher/git-fedora/Backend-Practice/RestAPI-Tutorial/The Backend/images"
-    );
+    cb(null, path.join(__dirname, "../images"));
   },
   filename: (req, file, cb) => {
     cb(null, new Date().toISOString() + "-" + file.originalname);
