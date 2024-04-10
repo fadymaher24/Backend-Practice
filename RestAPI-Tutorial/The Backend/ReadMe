@@ -41,6 +41,10 @@ npm install --save multer
 npm install --save-dev @types/multer
 
 
+# install bcryptjs for hashing passwords
+npm install --save bcryptjs @types/bcryptjs
+
+
 
 
 

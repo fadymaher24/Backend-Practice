@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import multer from "multer";
 
 import feedRoutes from "./routes/feed";
+import authRoutes from "./routes/auth";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -53,12 +54,14 @@ app.use((req, res, next) => {
 });
 
 app.use("/feed", feedRoutes);
+app.use("/auth", authRoutes);
 
 app.use((error: any, req: any, res: any, next: any) => {
   console.log(error);
   const status = error.statusCode || 500;
   const message = error.message;
-  res.status(status).json({ message: message });
+  const data = error.data;
+  res.status(status).json({ message: message, data: data });
 });
 
 mongoose
