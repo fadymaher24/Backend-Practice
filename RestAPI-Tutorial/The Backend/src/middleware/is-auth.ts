@@ -48,6 +48,6 @@ export const isAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
   next();
 };
 
-// export default isAuth;
+export default isAuth;
 
 // Path: src/middleware/is-auth.ts

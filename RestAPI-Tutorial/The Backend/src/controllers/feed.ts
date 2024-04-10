@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 
 import Post from "../models/post";
+import User from "../models/user";
 
 export const getPosts = (req: Request, res: Response, next: NextFunction) => {
   Post.find()
@@ -154,4 +155,65 @@ export const deletePost = (req: Request, res: Response, next: NextFunction) => {
       }
       next(err);
     });
+};
+
+export const getUserStatus = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.params.userId;
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error("User not found.");
+        (error as any).statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({ status: user.status });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+export const updateUserStatus = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.params.userId;
+  const newStatus = req.body.status;
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error("User not found.");
+        (error as any).statusCode = 404;
+        throw error;
+      }
+      user.status = newStatus;
+      return user.save();
+    })
+    .then((result) => {
+      res.status(200).json({ message: "User updated." });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+export default {
+  getPosts,
+  createPost,
+  getPost,
+  updatePost,
+  deletePost,
+  getUserStatus,
+  updateUserStatus,
 };

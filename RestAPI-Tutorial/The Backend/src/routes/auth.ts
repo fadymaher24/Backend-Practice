@@ -4,6 +4,9 @@ import { body } from "express-validator";
 import User from "../models/user";
 
 const authController = require("../controllers/auth");
+const feedController = require("../controllers/feed");
+const { isAuth } = require("../middleware/is-auth");
+
 const router = express.Router();
 
 router.put(
@@ -29,6 +32,15 @@ router.put(
 );
 
 router.post("/login", authController.login);
+
+router.get("/status", isAuth, feedController.getUserStatus);
+
+router.patch(
+  "/status",
+  isAuth,
+  [body("status").trim().not().isEmpty()],
+  feedController.updateUserStatus
+);
 
 export default router;
 
