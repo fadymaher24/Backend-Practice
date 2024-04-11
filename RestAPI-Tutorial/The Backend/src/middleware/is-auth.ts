@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+const Secret: string = process.env.Secret!;
+
 export const isAuth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
@@ -11,7 +13,7 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = authHeader.split(" ")[1];
   let decodedToken: jwt.JwtPayload;
   try {
-    decodedToken = jwt.verify(token, "somesupersecretsecret") as jwt.JwtPayload;
+    decodedToken = jwt.verify(token, Secret) as jwt.JwtPayload;
   } catch (err) {
     (err as any).statusCode = 500;
     throw err;
