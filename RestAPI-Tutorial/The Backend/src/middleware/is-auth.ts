@@ -11,7 +11,7 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = authHeader.split(" ")[1];
   let decodedToken: jwt.JwtPayload;
   try {
-    decodedToken = jwt.verify(token, "") as jwt.JwtPayload;
+    decodedToken = jwt.verify(token, "somesupersecretsecret") as jwt.JwtPayload;
   } catch (err) {
     (err as any).statusCode = 500;
     throw err;
