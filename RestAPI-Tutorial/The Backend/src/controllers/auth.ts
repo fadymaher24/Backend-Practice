@@ -110,11 +110,11 @@ export const errorHandler = (
 };
 
 export const getUserStatus = (
-  req: Request,
+  req: Request & { userId: string },
   res: Response,
   next: NextFunction
 ) => {
-  const userId = req.params.userId;
+  const userId = req.userId;
   User.findById(userId)
     .then((user) => {
       if (!user) {
@@ -132,11 +132,11 @@ export const getUserStatus = (
     });
 };
 export const updateUserStatus = (
-  req: Request,
+  req: Request & { userId: string },
   res: Response,
   next: NextFunction
 ) => {
-  const userId = req.params.userId;
+  const userId = req.userId;
   const newStatus = req.body.status;
   User.findById(userId)
     .then((user) => {

@@ -56,10 +56,6 @@ export const createPost = async (
   const content = req.body.content;
 
   try {
-    console.log(req.userId);
-    console.log("params:", req.params);
-    console.log("body:", req.body);
-
     const user = await User.findById(req.userId); // Use req.userId directly
     if (!user) {
       const error = new Error("User not found.");
@@ -168,7 +164,18 @@ export const deletePost = (
       return Post.findByIdAndDelete(postId);
     })
     .then((result) => {
-      console.log(result);
+      return User.findById(req.userId);
+    })
+    .then((user) => {
+      if (!user) {
+        const error = new Error("User not found.");
+        (error as any).statusCode = 404;
+        throw error;
+      }
+      user.posts = user.posts.filter((id) => id !== postId);
+      return user.save();
+    })
+    .then(() => {
       res.status(200).json({ message: "Deleted post." });
     })
     .catch((err) => {

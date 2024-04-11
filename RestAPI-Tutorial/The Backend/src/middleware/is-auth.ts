@@ -1,15 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-// Extend the Express types to include userId in the request object
-declare global {
-  namespace Express {
-    interface Request {
-      userId?: string;
-    }
-  }
-}
-
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -18,7 +9,11 @@ if (!SECRET) {
   throw new Error("Secret is not defined");
 }
 
-export const isAuth = (req: Request, res: Response, next: NextFunction) => {
+export const isAuth = (
+  req: Request & { userId: string },
+  res: Response,
+  next: NextFunction
+) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
     const error = new Error("Not authenticated.");
