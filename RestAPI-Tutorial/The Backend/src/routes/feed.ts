@@ -32,6 +32,4 @@ router.put(
 
 router.delete("/post/:postId", isAuth, feedController.deletePost);
 
-
-
 export default router;

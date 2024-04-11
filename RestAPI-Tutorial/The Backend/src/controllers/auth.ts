@@ -75,26 +75,24 @@ export const login = async (
     loadedUser = await User.findOne({ email: email });
 
     if (!loadedUser || !loadedUser.password) {
-      throw new CustomError("User not found or password is undefined", 401);
+      throw new Error("User not found or password is undefined");
     }
-    const isEqual = bcrypt.compare(password, loadedUser.password);
+
+    const isEqual = await bcrypt.compare(password, loadedUser.password);
     if (!isEqual) {
-      throw new CustomError("Wrong password!", 401);
+      throw new Error("Wrong password!");
     }
 
     const token = jwt.sign(
       {
-        email: loadedUser?.email,
-        userId: loadedUser?._id.toString(),
+        email: loadedUser.email,
+        userId: loadedUser._id.toString(),
       },
       "somesupersecretsecret",
       { expiresIn: "1h" }
     );
-    res.status(200).json({ token, userId: loadedUser?._id.toString() }); // Add null check here
-  } catch (err: any) {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
+    res.status(200).json({ token, userId: loadedUser._id.toString() });
+  } catch (err) {
     next(err);
   }
 };
@@ -133,7 +131,6 @@ export const getUserStatus = (
       next(err);
     });
 };
-
 export const updateUserStatus = (
   req: Request,
   res: Response,

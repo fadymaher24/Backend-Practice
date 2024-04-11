@@ -1,7 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const Secret: string = process.env.Secret!;
+// Extend the Express types to include userId in the request object
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: string;
+    }
+  }
+}
+
+import dotenv from "dotenv";
+dotenv.config();
+
+const SECRET: string = process.env.SECRET!;
+if (!SECRET) {
+  throw new Error("Secret is not defined");
+}
 
 export const isAuth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.get("Authorization");
@@ -13,16 +28,14 @@ export const isAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = authHeader.split(" ")[1];
   let decodedToken: jwt.JwtPayload;
   try {
-    decodedToken = jwt.verify(token, Secret) as jwt.JwtPayload;
+    decodedToken = jwt.verify(token, SECRET) as jwt.JwtPayload;
+    if (!decodedToken) {
+      throw new Error("Not authenticated.");
+    }
+    req.userId = decodedToken.userId; // Set req.userId directly
+    next();
   } catch (err) {
     (err as any).statusCode = 500;
-    throw err;
+    next(err);
   }
-  if (!decodedToken) {
-    const error = new Error("Not authenticated.");
-    (error as any).statusCode = 401;
-    throw error;
-  }
-  req.params.userId = decodedToken.userId;
-  next();
 };
