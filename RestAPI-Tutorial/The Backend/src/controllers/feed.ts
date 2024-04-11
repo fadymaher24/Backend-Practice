@@ -8,11 +8,25 @@ import Post from "../models/post";
 import User from "../models/user";
 
 export const getPosts = (req: Request, res: Response, next: NextFunction) => {
+  const currentPage = req.query.page || 1;
+  const perPage = 2;
+  let totalItems: number;
   Post.find()
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return Post.find()
+        .skip(
+          (parseInt(currentPage.toString()) - 1) * parseInt(perPage.toString())
+        )
+        .limit(parseInt(perPage.toString()));
+    })
     .then((posts) => {
-      res
-        .status(200)
-        .json({ message: "Fetched posts successfully.", posts: posts });
+      res.status(200).json({
+        message: "Fetched posts successfully.",
+        posts: posts,
+        totalItems: totalItems,
+      });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -37,18 +51,32 @@ export const createPost = (req: Request, res: Response, next: NextFunction) => {
   const imageUrl = req.file.path;
   const title = req.body.title;
   const content = req.body.content;
+  let creator: { _id: string; name: string };
   const post = new Post({
     title: title,
     content: content,
     imageUrl: imageUrl,
-    creator: { name: "Fady" },
+    creator: req.params.userId,
   });
   post
     .save()
     .then((result) => {
+      return User.findById(req.params.userId);
+    })
+    .then((user) => {
+      creator._id = user?.toString() || "";
+      creator.name = user?.name || "";
+      if (user) {
+        user.posts.push(post._id.toString()); // Convert post._id to string before pushing
+        return user.save();
+      }
+      return null;
+    })
+    .then((result) => {
       res.status(201).json({
         message: "Post created successfully!",
-        post: result,
+        post: post,
+        creator: { _id: creator._id, name: creator.name },
       });
     })
     .catch((err) => {
@@ -104,6 +132,11 @@ export const updatePost = (req: Request, res: Response, next: NextFunction) => {
         (error as any).statusCode = 404;
         throw error;
       }
+      if (post.creator.toString() !== req.params.userId) {
+        const error = new Error("Not authorized!");
+        (error as any).statusCode = 403;
+        throw error;
+      }
       if (imageUrl !== post.imageUrl) {
         clearImage(post.imageUrl);
       }
@@ -141,6 +174,11 @@ export const deletePost = (req: Request, res: Response, next: NextFunction) => {
         (error as any).statusCode = 404;
         throw error;
       }
+      if (post.creator.toString() !== req.params.userId) {
+        const error = new Error("Not authorized!");
+        (error as any).statusCode = 403;
+        throw error;
+      }
       // Check logged in user
       clearImage(post.imageUrl);
       return Post.findByIdAndDelete(postId); // Replace 'findByIdAndRemove' with 'findByIdAndDelete'
@@ -157,63 +195,10 @@ export const deletePost = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-export const getUserStatus = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const userId = req.params.userId;
-  User.findById(userId)
-    .then((user) => {
-      if (!user) {
-        const error = new Error("User not found.");
-        (error as any).statusCode = 404;
-        throw error;
-      }
-      res.status(200).json({ status: user.status });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
-};
-
-export const updateUserStatus = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const userId = req.params.userId;
-  const newStatus = req.body.status;
-  User.findById(userId)
-    .then((user) => {
-      if (!user) {
-        const error = new Error("User not found.");
-        (error as any).statusCode = 404;
-        throw error;
-      }
-      user.status = newStatus;
-      return user.save();
-    })
-    .then((result) => {
-      res.status(200).json({ message: "User updated." });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
-};
-
 export default {
   getPosts,
   createPost,
   getPost,
   updatePost,
   deletePost,
-  getUserStatus,
-  updateUserStatus,
 };
